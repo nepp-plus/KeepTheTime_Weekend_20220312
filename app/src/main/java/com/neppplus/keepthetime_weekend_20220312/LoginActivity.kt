@@ -97,6 +97,10 @@ class LoginActivity : BaseActivity() {
 
     override fun setValues() {
 
+//        저장해둔 자동로그인 여부를, 체크박스의 isChecked속성에 대입.
+
+        binding.autoLoginCheckBox.isChecked =  ContextUtil.getAutoLogin(mContext)
+
     }
 
 }
