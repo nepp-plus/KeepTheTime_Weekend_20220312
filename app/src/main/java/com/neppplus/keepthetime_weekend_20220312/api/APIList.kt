@@ -47,7 +47,7 @@ interface APIList {
 
     @GET("/user/friend")
     fun getRequestFriendList(
-
-    )
+        @Query("type") type: String,
+    ) : Call<BasicResponse>
 
 }
