@@ -29,5 +29,6 @@ class ManageFriendListActivity : BaseActivity() {
 //        내 친구목록에 데이터 채우기.
 //         => 서버가 실제로 내려주는 친구목록을 채워보자. (API 통신과 결합)
 
+
     }
 }
