@@ -3,6 +3,8 @@ package com.neppplus.keepthetime_weekend_20220312
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.neppplus.keepthetime_weekend_20220312.adapters.SearchedUserRecyclerAdapter
 import com.neppplus.keepthetime_weekend_20220312.databinding.ActivitySearchUserBinding
 import com.neppplus.keepthetime_weekend_20220312.datas.BasicResponse
 import com.neppplus.keepthetime_weekend_20220312.datas.UserData
@@ -16,6 +18,8 @@ class SearchUserActivity : BaseActivity() {
 
 
     val mSearchedUserList = ArrayList<UserData>()
+
+    lateinit var mAdapter: SearchedUserRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +43,14 @@ class SearchUserActivity : BaseActivity() {
                     call: Call<BasicResponse>,
                     response: Response<BasicResponse>
                 ) {
+                    if (response.isSuccessful) {
 
+                        val br = response.body()!!
+                        mSearchedUserList.addAll( br.data.users )
+
+                        mAdapter.notifyDataSetChanged()
+
+                    }
                 }
 
                 override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
@@ -53,6 +64,10 @@ class SearchUserActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+        mAdapter = SearchedUserRecyclerAdapter( mContext, mSearchedUserList )
+        binding.searchedUserRecyclerView.adapter = mAdapter
+        binding.searchedUserRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
     }
 }
