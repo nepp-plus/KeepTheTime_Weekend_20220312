@@ -24,7 +24,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        setCustomActionBar()
         setupEvents()
         setValues()
     }
@@ -73,18 +72,5 @@ class MainActivity : BaseActivity() {
 
     }
 
-    fun setCustomActionBar() {
-
-        val defaultActionBar = supportActionBar!!
-
-        defaultActionBar.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-//        defaultActionBar.setDisplayShowCustomEnabled(true) // 위의 코드가 자동완성 안되면 활용.
-
-        defaultActionBar.setCustomView(R.layout.my_custom_action_bar)
-
-        val toolbar = defaultActionBar.customView.parent as Toolbar
-        toolbar.setContentInsetsAbsolute(0, 0)
-
-    }
 
 }

@@ -2,7 +2,9 @@ package com.neppplus.keepthetime_weekend_20220312
 
 import android.content.Context
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.neppplus.keepthetime_weekend_20220312.api.APIList
 import com.neppplus.keepthetime_weekend_20220312.api.ServerAPI
 
@@ -29,6 +31,14 @@ abstract class BaseActivity : AppCompatActivity() {
         val retrofit = ServerAPI.getRetrofit(mContext)
         apiList = retrofit.create(APIList::class.java)
 
+//       (액션바가 있는 화면이라면) 액션바도 설정
+
+        if (supportActionBar != null) {
+            setCustomActionBar()
+        }
+
+
+
     }
 
 //    함수 - setupEvents / setValues 모든 화면이 (각각 내용이 다르게) 구현.
@@ -37,5 +47,18 @@ abstract class BaseActivity : AppCompatActivity() {
 
     abstract fun setupEvents()
     abstract fun setValues()
+
+//    커스텀 액션바 설정 함수 추가. => 실행 내용도 작성, 구체적 방안도 상속 시키자.
+
+    fun setCustomActionBar() {
+
+        val defaultActionBar = supportActionBar!!
+        defaultActionBar.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        defaultActionBar.setCustomView(R.layout.my_custom_action_bar)
+
+        val toolbar = defaultActionBar.customView.parent as Toolbar
+        toolbar.setContentInsetsAbsolute(0, 0)
+
+    }
 
 }
