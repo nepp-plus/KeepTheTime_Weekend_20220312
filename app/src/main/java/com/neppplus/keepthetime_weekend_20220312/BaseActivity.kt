@@ -32,10 +32,15 @@ abstract class BaseActivity : AppCompatActivity() {
         apiList = retrofit.create(APIList::class.java)
 
 //       (액션바가 있는 화면이라면) 액션바도 설정
+//        코틀린의 null 관리 : ? 가 이 변수가 실제로 있는가? 질문. => 실제로 있다면, 별개의 함수 (setCustomActionBar) 실행
 
-        if (supportActionBar != null) {
+        supportActionBar?.let {
+
+//            supportActionBar가 null이 아닐때 (실체가 있을때) 실행할 코드 : let {  }
             setCustomActionBar()
+
         }
+
 
 
 
