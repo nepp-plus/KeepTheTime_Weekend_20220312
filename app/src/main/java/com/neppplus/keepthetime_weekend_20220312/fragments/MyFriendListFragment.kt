@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.neppplus.keepthetime_weekend_20220312.R
 import com.neppplus.keepthetime_weekend_20220312.adapters.MyFriendRecyclerAdapter
 import com.neppplus.keepthetime_weekend_20220312.databinding.FragmentMyFriendListBinding
@@ -50,6 +51,9 @@ class MyFriendListFragment : BaseFragment() {
         mAdapter = MyFriendRecyclerAdapter(mContext, mMyFriendList)
         binding.myFriendRecyclerView.adapter = mAdapter
 
+//        리싸이클러뷰는 어떤 모양으로 표시할건지도 설정해야함.
+        binding.myFriendRecyclerView.layoutManager = LinearLayoutManager(mContext)  // 기본 세로 스크롤 (리스트뷰와 동일)
+
     }
 
     fun getMyFriendListFromServer() {
@@ -64,6 +68,9 @@ class MyFriendListFragment : BaseFragment() {
                     val br = response.body()!!
 
                     mMyFriendList.addAll( br.data.friends )
+
+//                    리스트뷰처럼, 목록에 변화가 생기면 어댑터의 새로고침
+                    mAdapter.notifyDataSetChanged()
 
                 }
 
