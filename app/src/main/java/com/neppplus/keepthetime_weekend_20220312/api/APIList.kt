@@ -50,4 +50,10 @@ interface APIList {
         @Query("type") type: String,
     ) : Call<BasicResponse>
 
+
+    @GET("/search/user")
+    fun getRequestSearchUser(
+        @Query("nickname") nickname: String,
+    ) : Call<BasicResponse>
+
 }
