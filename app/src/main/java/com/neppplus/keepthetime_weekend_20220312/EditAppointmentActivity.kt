@@ -131,6 +131,11 @@ class EditAppointmentActivity : BaseActivity() {
             marker.icon = MarkerIcons.BLACK // 이 위에 원하는 색 커스텀
             marker.iconTintColor = Color.parseColor("#FF0000") // 안드로이드가 주는 색
 
+//            마커 크기 변경
+
+            marker.width = 50
+            marker.height = 80
+
 
         }
 
