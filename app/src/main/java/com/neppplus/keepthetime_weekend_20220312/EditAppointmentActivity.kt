@@ -9,6 +9,8 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
 import com.neppplus.keepthetime_weekend_20220312.databinding.ActivityEditAppointmentBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -105,6 +107,19 @@ class EditAppointmentActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+        binding.mapView.getMapAsync {
+
+//            it 변수 대신, 문서와 같은 이름의 변수 naverMap 에 옮겨 담고 사용.
+            val naverMap = it
+
+//            기본 지도의 시작 화면 : 서울시청. => 네이버지도의 시작 좌표 : 넵플러스 학원
+
+            val cameraUpdate =  CameraUpdate.scrollTo( LatLng( 37.577927550342345, 127.03360311276816 ) )
+            naverMap.moveCamera( cameraUpdate )
+
+
+        }
 
     }
 }
