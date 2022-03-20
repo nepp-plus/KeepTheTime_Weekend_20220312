@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.overlay.Marker
 import com.neppplus.keepthetime_weekend_20220312.databinding.ActivityEditAppointmentBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -117,6 +118,12 @@ class EditAppointmentActivity : BaseActivity() {
 
             val cameraUpdate =  CameraUpdate.scrollTo( LatLng( 37.577927550342345, 127.03360311276816 ) )
             naverMap.moveCamera( cameraUpdate )
+
+//            넵플러스 학원 위치에, 마커를 띄워보자.
+
+            val marker = Marker()
+            marker.position =  LatLng(37.577927550342345, 127.03360311276816)
+            marker.map = naverMap
 
 
         }
