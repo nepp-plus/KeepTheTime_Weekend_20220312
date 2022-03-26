@@ -11,6 +11,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.PathOverlay
 import com.neppplus.keepthetime_weekend_20220312.databinding.ActivityViewMapBinding
 import com.neppplus.keepthetime_weekend_20220312.datas.AppointmentData
 import com.odsay.odsayandroidsdk.API
@@ -19,6 +20,7 @@ import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 // 도전 과제
 // 네이버 지도를 화면 가득 띄우기. (라이브러리는 이미 설치 됨)
@@ -143,6 +145,22 @@ class ViewMapActivity : BaseActivity() {
                         }
 
                         infoWindow.open(marker)
+                        
+//                        출발지 ~ 도착지 까지의 경로선 표시.
+                        
+                        val path = PathOverlay()
+
+//                        어느 점들을 지나도록 하는지, 좌표 목록. => 임시 : 출발지 / 도착지만.
+                        val pathPoints = ArrayList<LatLng>()
+//                        출발지 먼저 추가
+                        val startLatLng = LatLng( mAppointmentData.start_latitude,  mAppointmentData.start_longitude )
+                        pathPoints.add( startLatLng )
+                        
+//                        도착지 마지막에 추가
+                        pathPoints.add( latLng )  // 지도 로딩 초반부에 만든 변수 재활용
+
+                        path.coords = pathPoints
+                        path.map = naverMap
 
 
                     }
