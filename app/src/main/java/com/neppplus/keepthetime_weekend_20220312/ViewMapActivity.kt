@@ -2,6 +2,7 @@ package com.neppplus.keepthetime_weekend_20220312
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -81,6 +82,17 @@ class ViewMapActivity : BaseActivity() {
                 object : OnResultCallbackListener {
                     override fun onSuccess(p0: ODsayData?, p1: API?) {
                         // 길찾기 응답이 돌아오면 할 일.
+
+                        val jsonObj = p0!!.json  // 길찾기 응답이 돌아온 JSONObject를 변수에 저장.
+                        Log.d("길찾기응답", jsonObj.toString())
+
+//                        jsonObj의 내부에서, => result라는 이름표를 가진 {  } 추출
+//                        result가 JSONObject라고 명시 : resultObj로 변수 이름 설정.
+                        val resultObj =  jsonObj.getJSONObject("result")
+
+//                        result: { } 안에서, pointDistance 라는 이름표의 Int값 추출 예시.
+                        val pointDistance = resultObj.getInt("pointDistance")
+
 
 
                     }
