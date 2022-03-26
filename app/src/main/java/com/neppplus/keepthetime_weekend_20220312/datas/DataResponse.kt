@@ -10,5 +10,6 @@ class DataResponse(
 
     val appointments: List< AppointmentData >, // 약속목록 API가 호출되면 사용할 데이터.
 
+    val places: List<StartingPointData>,
 ) {
 }
