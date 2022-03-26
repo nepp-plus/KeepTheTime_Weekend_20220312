@@ -1,5 +1,7 @@
 package com.neppplus.keepthetime_weekend_20220312.datas
 
+import java.io.Serializable
+
 class AppointmentData(
     val id: Int,
     val user_id: Int,
@@ -12,5 +14,5 @@ class AppointmentData(
     val latitude: Double,
     val longitude: Double,
 
-) {
+) : Serializable {
 }
