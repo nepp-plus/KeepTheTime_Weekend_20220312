@@ -6,12 +6,15 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
 import com.neppplus.keepthetime_weekend_20220312.adapters.StartingPointSpinnerAdapter
@@ -32,6 +35,9 @@ class EditAppointmentActivity : BaseActivity() {
 //    선택한 약속일시를 저장하는 Calendar 변수
     val mSelectedDatetimeCal = Calendar.getInstance()  // 현재 일시가 기본 저장. (일시 + 초 + 1/1000초)
 
+//    로딩이 완료된 네이버맵을 담을 변수.
+    var mNaverMap : NaverMap? = null // 처음에는 지도도 불러지지 않은 상태.
+
 //    지도에 띄워줄 목적지 표시 마커.
     var myMarker : Marker? = null  // 처음에는 목적지 마커도 없는 상태.
 
@@ -48,6 +54,24 @@ class EditAppointmentActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+//        스피너의 아이템 선택 이벤트 처리. (출발지 변경시 대응)
+
+        binding.startingPointSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+
+                val selectedStartingPoint = mStartingPointList[position]
+
+//                선택한 출발지 > 지도의 빨간 마커 위치 이동. > naverMap변수를 받아내야 사용 가능.
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+        }
+
 
 //        지도 / 스크롤뷰의 상하 스크롤이 겹쳐서 지도에 문제 발생.
 //        해결책 : 지도 위에 텍스트뷰를 덮어두고, 해당 텍스트뷰에 손이 닿으면 (touch) => 스크롤뷰의 스크롤 기능을 일시정지.
@@ -234,35 +258,60 @@ class EditAppointmentActivity : BaseActivity() {
 
     override fun setValues() {
 
+//        지도 객체를 얻어오면, 출발지/도착지 정보 활용, 별개의 함수 실행.
         binding.mapView.getMapAsync {
 
-//            it 변수 대신, 문서와 같은 이름의 변수 naverMap 에 옮겨 담고 사용.
-            val naverMap = it
+//            불러진 지도를 멤버변수에 저장.
+            mNaverMap = it
+
+//            지도가 불러지고 나서, 출발/도착지 새로 그리기
+            setStartAndEndToNaverMap()
+
+        }
+
+        getMyStartingPointFromServer()
+
+        mStartingPointSpinnerAdapter = StartingPointSpinnerAdapter(mContext, R.layout.starting_point_list_item, mStartingPointList)
+        binding.startingPointSpinner.adapter = mStartingPointSpinnerAdapter
+
+    }
+
+//   네이버 지도를 가지고, 출발지/도착지 등을 그려주는 함수.
+
+    fun setStartAndEndToNaverMap() {
+
+//        혹시 지도가 안불러졌는지? 밑의 코드 실행 X. (안정성 보강)
+        if (mNaverMap == null) {
+            return
+        }
+
+//            mNaverMap은 null 아니다.
+        val naverMap = mNaverMap!!
 
 //            기본 지도의 시작 화면 : 서울시청. => 네이버지도의 시작 좌표 : 넵플러스 학원
 
-            val cameraUpdate =  CameraUpdate.scrollTo( LatLng( 37.577927550342345, 127.03360311276816 ) )
-            naverMap.moveCamera( cameraUpdate )
+        val cameraUpdate =  CameraUpdate.scrollTo( LatLng( 37.577927550342345, 127.03360311276816 ) )
+        naverMap.moveCamera( cameraUpdate )
 
 //            넵플러스 학원 위치에, 마커를 띄워보자.
 
-            val marker = Marker()
-            marker.position =  LatLng(37.577927550342345, 127.03360311276816)
-            marker.map = naverMap
+        val marker = Marker()
+        marker.position =  LatLng(37.577927550342345, 127.03360311276816)
+        marker.map = naverMap
 
 //            마커 색상 변경
-            marker.icon = MarkerIcons.BLACK // 이 위에 원하는 색 커스텀
-            marker.iconTintColor = Color.parseColor("#FF0000") // 안드로이드가 주는 색
+        marker.icon = MarkerIcons.BLACK // 이 위에 원하는 색 커스텀
+        marker.iconTintColor = Color.parseColor("#FF0000") // 안드로이드가 주는 색
 
 //            마커 크기 변경
 
-            marker.width = 50
-            marker.height = 80
-            
+        marker.width = 50
+        marker.height = 80
+
 //            네이버 지도의 클릭 이벤트
-            
-            naverMap.setOnMapClickListener { pointF, latLng -> 
-                
+
+        naverMap.setOnMapClickListener { pointF, latLng ->
+
 //                클릭된 좌표 latLng 변수의 내용을 토스트로 출력
 //                Toast.makeText(
 //                    mContext,
@@ -275,23 +324,16 @@ class EditAppointmentActivity : BaseActivity() {
 //                myMarker가 만들어진게 없다면, 새로 마커 생성.
 //                만들어진게 있다면, 기존 마커 재활용.
 
-                if (myMarker == null) {
-                    myMarker = Marker()
-                }
-
-                myMarker!!.position = latLng  // 클릭된 지점 자체를 위치로 설정.
-                myMarker!!.map = naverMap
-
-                
+            if (myMarker == null) {
+                myMarker = Marker()
             }
+
+            myMarker!!.position = latLng  // 클릭된 지점 자체를 위치로 설정.
+            myMarker!!.map = naverMap
 
 
         }
 
-        getMyStartingPointFromServer()
-
-        mStartingPointSpinnerAdapter = StartingPointSpinnerAdapter(mContext, R.layout.starting_point_list_item, mStartingPointList)
-        binding.startingPointSpinner.adapter = mStartingPointSpinnerAdapter
 
     }
 
