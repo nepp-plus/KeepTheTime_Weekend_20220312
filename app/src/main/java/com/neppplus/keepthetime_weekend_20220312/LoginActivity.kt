@@ -39,10 +39,23 @@ class LoginActivity : BaseActivity() {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(mContext)) {
                 
                 Log.d("카톡로그인", "앱으로 로그인 가능")
+                UserApiClient.instance.loginWithKakaoTalk(mContext) { token, error ->
+
+//                    카톡 앱으로 로그인 되었을때 할 코드
+                    getKakaoUserInfo()
+
+                }
                 
             }
             else {
                 Log.d("카톡로그인", "앱으로 로그인 불가 - 별도 로그인 필요")
+
+                UserApiClient.instance.loginWithKakaoAccount(mContext) { token, error ->
+
+//                    카톡 앱이 없어서, 다른 방식으로 로그인 되었을때 할 코드.
+                    getKakaoUserInfo()
+
+                }
                 
             }
 
@@ -134,6 +147,14 @@ class LoginActivity : BaseActivity() {
 //        저장해둔 자동로그인 여부를, 체크박스의 isChecked속성에 대입.
 
         binding.autoLoginCheckBox.isChecked =  ContextUtil.getAutoLogin(mContext)
+
+    }
+
+//    카톡 앱이건, 다른 방식이건 카카오 로그인이 되었다면 실행할 함수.
+//    로그인한 사용자의 고유정보 받아오기
+
+    fun getKakaoUserInfo() {
+
 
     }
 
