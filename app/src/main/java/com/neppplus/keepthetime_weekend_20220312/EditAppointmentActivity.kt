@@ -21,6 +21,10 @@ import com.neppplus.keepthetime_weekend_20220312.adapters.StartingPointSpinnerAd
 import com.neppplus.keepthetime_weekend_20220312.databinding.ActivityEditAppointmentBinding
 import com.neppplus.keepthetime_weekend_20220312.datas.BasicResponse
 import com.neppplus.keepthetime_weekend_20220312.datas.StartingPointData
+import com.odsay.odsayandroidsdk.API
+import com.odsay.odsayandroidsdk.ODsayData
+import com.odsay.odsayandroidsdk.ODsayService
+import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -369,7 +373,29 @@ class EditAppointmentActivity : BaseActivity() {
         myMarker!!.map = naverMap
 
 
+//        출발지 / 도착지가 모두 반영되는 구조 완성.
+//        길찾기 API 호출 => 결과 분석, 화면에 추가 반영. (선 긋기 / 정보 표시)
 
+        val odSay = ODsayService.init(mContext, "ibCHTdMdnDJJp7pwFm4x8HVWc+RS7nNQ7RToDs9FjME")
+        odSay.requestSearchPubTransPath(
+            mSelectedStartPoint!!.longitude.toString(),
+            mSelectedStartPoint!!.latitude.toString(),
+            mAppointmentLatLng!!.longitude.toString(),
+            mAppointmentLatLng!!.latitude.toString(),
+            null,
+            null,
+            null,
+            object : OnResultCallbackListener {
+                override fun onSuccess(p0: ODsayData?, p1: API?) {
+
+                }
+
+                override fun onError(p0: Int, p1: String?, p2: API?) {
+
+                }
+
+            }
+        )
 
     }
 
