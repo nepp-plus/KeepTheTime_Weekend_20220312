@@ -55,6 +55,9 @@ class EditAppointmentActivity : BaseActivity() {
 //    지도에 띄워줄 목적지 표시 마커.
     var myMarker : Marker? = null  // 처음에는 목적지 마커도 없는 상태.
 
+//    경로선도, 하나만 만들고 계속 재활용.
+    var mPath : PathOverlay? = null // 처음에는 경로선도 없는 상태.
+
 //    내가 만들어둔 출발지 목록 List
     val mStartingPointList = ArrayList<StartingPointData>()
 
@@ -435,7 +438,9 @@ class EditAppointmentActivity : BaseActivity() {
 
 //                    경로선 자체 생성, 첫 좌표는 출발지.
 
-                    val path = PathOverlay()
+                    if (mPath == null) {
+                        mPath = PathOverlay()
+                    }
 
                     val pathCoordList = ArrayList<LatLng>()
 
@@ -479,8 +484,8 @@ class EditAppointmentActivity : BaseActivity() {
 
 
 //                    모든 좌표가 추가되었으니, 지도에 나오도록
-                    path.coords = pathCoordList
-                    path.map = naverMap
+                    mPath!!.coords = pathCoordList
+                    mPath!!.map = naverMap
 
                 }
 
